@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     id: string,
     username: string,
     age: number,
@@ -7,7 +7,7 @@ interface User {
 
 export type UserInput = Omit<User, "id">
 
-const userDb: User[] = [];
+const userDb: User[] = [{"id":"876c2611-aa48-4ab4-9199-e8fc83e492b8","username":"Artur","age":23,"hobbies":["footbal"]}];
 
 export function getAllUsers() {
     return userDb;
@@ -21,12 +21,12 @@ export function addUser(user: User) {
     userDb.push(user);
 }
 
-export function updateUser(user: Partial<User> & { id: string }): boolean {
+export function updateUser(user: Partial<User> & { id: string }) {
     const oldUser = getUserById(user.id)
-    if (!oldUser) return false;
+    if (!oldUser) return null;
 
-    Object.assign(oldUser, user);
-    return true;
+    const newUser = Object.assign(oldUser, user);
+    return newUser;
 }
 
 export function removeUserById(id: string) {
