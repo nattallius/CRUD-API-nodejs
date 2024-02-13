@@ -20,21 +20,25 @@ export function requestHandler(req: http.IncomingMessage, res: http.ServerRespon
         body += chunk;
     });
     req.on('end', () => {
-        switch (method) {
-            case METHOD.GET:
-                handleGetRequest(url!, res);
-                break;
-            case METHOD.POST:
-                handlePostRequest(url!, body, res);
-                break;
-            case METHOD.PUT:
-                handlePutRequest(url, body, res);
-                break;
-            case METHOD.DELETE:
-                handleDeleteRequest(url, res);
-                break;
-            default:
-                sendNotFoundResponse(res);
+        try {
+            switch (method) {
+                case METHOD.GET:
+                    handleGetRequest(url!, res);
+                    break;
+                case METHOD.POST:
+                    handlePostRequest(url!, body, res);
+                    break;
+                case METHOD.PUT:
+                    handlePutRequest(url, body, res);
+                    break;
+                case METHOD.DELETE:
+                    handleDeleteRequest(url, res);
+                    break;
+                default:
+                    sendNotFoundResponse(res);
+            }
+        } catch (e) {
+            sendServerErrorResponse(res);
         }
     });
     req.on('error', () => {
