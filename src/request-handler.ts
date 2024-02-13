@@ -73,7 +73,10 @@ function handleGetRequest(url: string, res: http.ServerResponse) {
         res.write(JSON.stringify(user));
         res.statusCode = STATUS_CODES.Success;
         res.end();
+        return;
     }
+
+    sendNotFoundResponse(res);
 }
 
 function handlePostRequest(url: string, bodyChunk: any, res: http.ServerResponse) {
@@ -128,7 +131,10 @@ function handlePutRequest(url: string, bodyChunk: any, res: http.ServerResponse)
         res.write(JSON.stringify(updatedUser));
         res.statusCode = STATUS_CODES.Created;
         res.end();
+        return;
     }
+
+    sendNotFoundResponse(res);
 }
 
 function handleDeleteRequest(url: string, res: http.ServerResponse) {
@@ -149,14 +155,15 @@ function handleDeleteRequest(url: string, res: http.ServerResponse) {
 
         res.statusCode = STATUS_CODES.No_Content;
         res.end();
+        return;
     }
+    sendNotFoundResponse(res);
 }
 
 function validatePostUser(body: any): body is UserInput {
     if (!body.username || typeof body.username !== 'string') return false;
     if (!body.age || typeof body.age !== 'number') return false;
-    if (!body.hobbies || !Array.isArray(body.hobbies)) return false;
-    if (body.hobbies.some((hobby) => typeof hobby !== 'string')) return false;
+    if (!body.hobbies || !isArrayOfStrings(body.hobbies)) return false;
     return true;
 }
 
@@ -164,8 +171,12 @@ function getUpdatedUser(body) {
     const newUser = {};
     if ('username' in body) Object.assign(newUser, {username: body.username});
     if ('age' in body) Object.assign(newUser, {age: body.age});
-    if ('hobbies' in body) Object.assign(newUser, {hobbies: body.hobbies});
+    if ('hobbies' in body && isArrayOfStrings(body.hobbies)) Object.assign(newUser, {hobbies: body.hobbies});
 
     if (Object.keys(newUser).length === 0) return null;
     return newUser;
+}
+
+function isArrayOfStrings(array: any): boolean {
+    return Array.isArray(array) &&  array.some((hobby) => typeof hobby !== 'string');
 }

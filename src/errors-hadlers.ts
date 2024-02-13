@@ -15,6 +15,6 @@ export function sendServerErrorResponse(res: http.ServerResponse) {
 
 export function sendBadRequestError (res: http.ServerResponse) {
     res.statusCode = STATUS_CODES.Bad_Request;
-    res.statusMessage = ERRORS_MESSAGES.Server_Error;
+    res.statusMessage = ERRORS_MESSAGES.Bad_Request;
     res.end();
 }
