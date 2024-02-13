@@ -169,8 +169,8 @@ function validatePostUser(body: any): body is UserInput {
 
 function getUpdatedUser(body) {
     const newUser = {};
-    if ('username' in body) Object.assign(newUser, {username: body.username});
-    if ('age' in body) Object.assign(newUser, {age: body.age});
+    if ('username' in body && typeof body.username === 'string') Object.assign(newUser, {username: body.username});
+    if ('age' in body && typeof body.age === 'number') Object.assign(newUser, {age: body.age});
     if ('hobbies' in body && isArrayOfStrings(body.hobbies)) Object.assign(newUser, {hobbies: body.hobbies});
 
     if (Object.keys(newUser).length === 0) return null;
@@ -178,5 +178,5 @@ function getUpdatedUser(body) {
 }
 
 function isArrayOfStrings(array: any): boolean {
-    return Array.isArray(array) &&  array.some((hobby) => typeof hobby !== 'string');
+    return Array.isArray(array) &&  array.every((hobby) => typeof hobby === 'string');
 }
